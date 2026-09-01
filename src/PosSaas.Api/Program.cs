@@ -114,20 +114,27 @@ builder.Services.AddOpenApi(options =>
 
 var app = builder.Build();
 
-// Seed one demo tenant/user/product so the API is immediately usable. Runs in its own
-// scope now that PosSaasStore/PosSaasDbContext are Scoped rather than Singleton. Uses
-// EnsureCreated rather than a migrations-based Database.Migrate() call so this keeps
-// working out of the box before anyone has run `dotnet ef migrations add Initial` - switch
-// to Migrate() once real migrations exist (see README / final notes for that command).
-//if (app.Environment.IsDevelopment())
-//{
-//    using (var scope = app.Services.CreateScope())
-//    {
-//        var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
-//        db.Database.EnsureCreated();
-//        await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
-//    }
-//}
+// Schema creation always runs, every environment - EnsureCreated is a no-op if the tables
+// already exist, so this is safe to call on every startup, not just the first one. Uses
+// EnsureCreated rather than a migrations-based Database.Migrate() call so this keeps working
+// out of the box before anyone has run `dotnet ef migrations add Initial` - switch to
+// Migrate() once real migrations exist (see README / final notes for that command).
+//
+// Demo-data seeding (SeedData.Seed - one fake tenant, a year of orders) is deliberately
+// Development-only: skipping it in Production is right, but an earlier version of this block
+// commented out EnsureCreated too, which took the schema down with it - on a fresh production
+// database that meant every endpoint failed with a Postgres "relation does not exist" error,
+// not just an empty demo. Schema creation and demo seeding are two different concerns; only
+// the second one should ever be environment-gated.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
+    db.Database.EnsureCreated();
+    if (app.Environment.IsDevelopment())
+    {
+        await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
+    }
+}
 
 app.UseCors();
 app.UseRateLimiter();
@@ -148,7 +155,7 @@ app.MapGet("/", () => Results.Ok(new
 {
     service = "POS SaaS API",
     status = "ok",
-    note = "EF Core + SQL Server persistence, hand-rolled JWT for this scaffold - see README for the JwtBearer/Swashbuckle package swap and appsettings.json ConnectionStrings:Default for the SQL Server connection string.",
+    note = "EF Core + PostgreSQL persistence, hand-rolled JWT for this scaffold - see README for the JwtBearer/Swashbuckle package swap and appsettings.json ConnectionStrings:Default for the connection string.",
     apiDocs = "/scalar/v1",
     health = "/health",
     demoLogin = new { email = "owner@demo.pos", password = "Demo@123" }
