@@ -1,0 +1,22 @@
+# Build output
+bin/
+obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+
+# appsettings.json holds a real, live connection string (including a database password) on
+# this machine - never committed. appsettings.Example.json (tracked) ships the same structure
+# with safe local-dev placeholder values; copy it to appsettings.json and fill in your own
+# connection string/JWT secret to run this locally.
+appsettings.json
+appsettings.*.json
+!appsettings.Example.json
+
+# EF Core / misc
+*.db
+*.db-shm
+*.db-wal

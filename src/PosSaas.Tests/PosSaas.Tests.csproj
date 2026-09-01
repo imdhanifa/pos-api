@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <!-- Cannot be restored in the sandbox this scaffold was built in (api.nuget.org
+       blocked) - the test files are written by hand against the real xUnit 2.9 API
+       surface and will build/run once this restores on a machine with NuGet access:
+       `cd backend/src/PosSaas.Tests && dotnet restore && dotnet test`. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Domain + Infrastructure only - deliberately NOT PosSaas.Api, so this project never
+       needs the web host and can't accidentally pull in EF Core transitively through it
+       either (Infrastructure carries that dependency; these tests exercise
+       InMemoryRepository<T>, which has none). -->
+  <ItemGroup>
+    <ProjectReference Include="..\PosSaas.Domain\PosSaas.Domain.csproj" />
+    <ProjectReference Include="..\PosSaas.Infrastructure\PosSaas.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

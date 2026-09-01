@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "PosSaas.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://192.168.10.34:59614;http://localhost:59615"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Zero external dependencies by design - see README "Automated tests": this is what
+       lets `dotnet build src/PosSaas.Domain` succeed even in a sandbox with no NuGet
+       access, and what lets PosSaas.Tests exercise entities/OrderMath/InMemoryRepository
+       without needing EF Core or any other package restored. -->
+
+</Project>
