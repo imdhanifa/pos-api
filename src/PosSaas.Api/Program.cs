@@ -119,12 +119,15 @@ var app = builder.Build();
 // EnsureCreated rather than a migrations-based Database.Migrate() call so this keeps
 // working out of the box before anyone has run `dotnet ef migrations add Initial` - switch
 // to Migrate() once real migrations exist (see README / final notes for that command).
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
-    db.Database.EnsureCreated();
-    await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    using (var scope = app.Services.CreateScope())
+//    {
+//        var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
+//        db.Database.EnsureCreated();
+//        await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
+//    }
+//}
 
 app.UseCors();
 app.UseRateLimiter();
