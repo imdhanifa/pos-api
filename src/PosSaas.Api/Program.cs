@@ -126,15 +126,15 @@ var app = builder.Build();
 // database that meant every endpoint failed with a Postgres "relation does not exist" error,
 // not just an empty demo. Schema creation and demo seeding are two different concerns; only
 // the second one should ever be environment-gated.
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
-    db.Database.EnsureCreated();
-    if (app.Environment.IsDevelopment())
-    {
-        await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
-    }
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var db = scope.ServiceProvider.GetRequiredService<PosSaasDbContext>();
+//    db.Database.EnsureCreated();
+//    if (app.Environment.IsDevelopment())
+//    {
+//        await SeedData.Seed(scope.ServiceProvider.GetRequiredService<PosSaasStore>());
+//    }
+//}
 
 app.UseCors();
 app.UseRateLimiter();
