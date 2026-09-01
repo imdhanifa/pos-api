@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+.git/
+.gitignore
+**/appsettings.json
+**/appsettings.*.json
+!**/appsettings.Example.json
+*.md
